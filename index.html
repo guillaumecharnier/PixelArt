@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pixel Art Maker</title>
+  <style>
+    body {
+      background-image: url('../PixelArt/ressources/pixel\ art\ background\ _\ +31\ Idées\ et\ designs\ pour\ vous\ inspirer\ en\ images.jpeg');
+      background-size: cover;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    #colorPicker {
+      margin-right: 10px;
+    }
+
+    .grid-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 100px; /* Ajout d'une marge à droite */
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(50, 10px); /* 50 colonnes */
+      grid-template-rows: repeat(50, 10px); /* 50 lignes */
+      gap: 1px;
+      border: 1px solid #000;
+      background-color: rgba(255, 255, 255, 0.8); /* Opacité de la grille */
+    }
+
+    .cell {
+      width: 10px;
+      height: 10px;
+      background-color: #fff;
+    }
+
+    .model {
+      width: 500px; /* Même largeur que la grille */
+      height: 500px; /* Même hauteur que la grille */
+      border: 1px solid #000;
+      background-size: contain;
+    }
+
+    .model + .model {
+      margin-top: 20px;
+    }
+
+    /* Pour les boutons de sélection d'image */
+    .image-button {
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-container">
+    <input type="color" id="colorPicker">
+    <div class="grid" id="grid"></div>
+  </div>
+  <div class="model" id="model" style="background-image: url('../PixelArt/ressources/pixel-art-pokemon-696x433.jpg');"></div>
+  <div class="image-buttons">
+    <button class="image-button" onclick="selectImage('../PixelArt/ressources/pixel-art-pokemon-696x433.jpg')">Image 1</button>
+    <button class="image-button" onclick="selectImage('')">Image 2</button>
+    <button class="image-button" onclick="selectImage('../PixelArt/ressources/pixel-art-pokemon-696x433.jpg')">Image 3</button>
+    <!-- Ajoutez d'autres boutons pour plus d'images -->
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const grid = document.getElementById('grid');
+      const colorPicker = document.getElementById('colorPicker');
+      let isMouseDown = false;
+
+      // Fonction pour remplir la cellule au clic
+      function fillCell(event) {
+        const color = colorPicker.value;
+        event.target.style.backgroundColor = color;
+      }
+
+      // Écouter l'événement du clic pour remplir une seule cellule
+      grid.addEventListener('click', fillCell);
+
+      // Écouter l'événement de mousedown pour remplir les cellules en continu
+      grid.addEventListener('mousedown', function() {
+        isMouseDown = true;
+        grid.addEventListener('mousemove', fillCell);
+      });
+
+      // Désactiver le remplissage lors du relâchement du clic
+      document.addEventListener('mouseup', function() {
+        isMouseDown = false;
+        grid.removeEventListener('mousemove', fillCell);
+      });
+
+      // Créer la grille de dessin
+      createGrid(50, 50); // 50 lignes x 50 colonnes
+    });
+
+    // Fonction pour créer la grille de dessin
+    function createGrid(rows, cols) {
+      const grid = document.getElementById('grid');
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < cols; j++) {
+          const cell = document.createElement('div');
+          cell.classList.add('cell');
+          grid.appendChild(cell);
+        }
+      }
+    }
+
+    // Charger l'image sélectionnée dans la grille modèle
+    function selectImage(imagePath) {
+      const model = document.getElementById('model');
+      model.style.backgroundImage = `url(${imagePath})`;
+    }
+  </script>
+</body>
+</html>
